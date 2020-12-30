@@ -53,7 +53,7 @@ class ProjectCreated extends Notification
             ->sender("sender@email.com")
             ->name("Sender Name")
             ->subject("My Subject")
-            ->content("My Html Content");
+            ->content("My Html Content"); // or ->view("view:location", [])
     }
 }
 ```
