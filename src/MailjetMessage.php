@@ -2,6 +2,8 @@
 
 namespace Numesia\Mailjet;
 
+use Illuminate\Container\Container;
+
 class MailjetMessage
 {
     /**
@@ -24,6 +26,20 @@ class MailjetMessage
      * @var string|null
      */
     public $name;
+
+    /**
+     * The view to be rendered.
+     *
+     * @var array|string
+     */
+    public $view;
+
+    /**
+     * The view data for the message.
+     *
+     * @var array
+     */
+    public $viewData = [];
 
     /**
      * The email subject.
@@ -83,6 +99,21 @@ class MailjetMessage
     }
 
     /**
+     * Set the view for the mail message.
+     *
+     * @param  array|string  $view
+     * @param  array  $data
+     * @return $this
+     */
+    public function view($view, array $data = [])
+    {
+        $this->view     = $view;
+        $this->viewData = $data;
+
+        return $this;
+    }
+
+    /**
      * Set the email subject.
      *
      * @param  string  $subject
@@ -102,11 +133,19 @@ class MailjetMessage
      */
     public function toArray(): array
     {
+        if ($this->view) {
+            $content = Container::getInstance()->make('mailer')->render(
+                $this->view, $this->viewData
+            );
+        } else {
+            $content = $this->content;
+        }
+
         return [
             'sender'  => $this->sender,
             'name'    => $this->name,
             'subject' => $this->subject,
-            'content' => $this->content,
+            'content' => $content,
         ];
     }
 }
