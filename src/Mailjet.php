@@ -6,6 +6,7 @@ use Exception;
 use Mailjet as MailjetBase;
 use Mailjet\Resources;
 use Psr\Http\Message\ResponseInterface;
+use Mailjet\Response;
 
 class Mailjet
 {
@@ -15,34 +16,32 @@ class Mailjet
      * @param  string  $to
      * @param  array  $data
      * @param  string|null  $sender
-     * @return \Psr\Http\Message\ResponseInterface|null
+     * @return \Mailjet\Response|null
      */
-    public function sendEmail(string $to, array $data):  ? ResponseInterface
+    public function sendEmail(string $to, array $data)
     {
         $response = MailjetBase::post(Resources::$Email, $this->formatRequest($to, $data));
 
-        return $response->getStatusCode() === 200
+        return $response->getStatus() === 200
         ? $this->checkResponseAndReturn($response)
-        : $response;
+        : true;
     }
 
-    protected function checkResponseAndReturn(ResponseInterface $response) : ResponseInterface
+    protected function checkResponseAndReturn(Response $response)
     {
-        $content = json_decode($response->getBody()->getContents());
+        $content = $response->getBody();
 
         $messageId = data_get($content, 'Sent.0.MessageID');
 
-        $error = null;
+        $success = true;
 
         try {
-            $response = MailjetBase::get(Mailjet\Resources::$Message, ["id" => $messageId]);
+            $response = MailjetBase::get(Resources::$Message, ["id" => $messageId]);
         } catch (Exception $e) {
-            $error = "The message $messageId wasn't sent, please check mailjet website";
+            $success = "The message $messageId wasn't sent, please check mailjet website";
         }
 
-        return !$error
-        ? $response
-        : $response->withStatus(400, $error);
+        return $success;
     }
 
     /**

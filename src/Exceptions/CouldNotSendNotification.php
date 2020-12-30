@@ -2,12 +2,10 @@
 
 namespace Numesia\Mailjet\Exceptions;
 
-use Psr\Http\Message\ResponseInterface;
-
 class CouldNotSendNotification extends \Exception
 {
-    public static function serviceRespondedWithAnError(ResponseInterface $response)
+    public static function serviceRespondedWithAnError($error)
     {
-        return new static('Mailjet responded with an error: `'.$response->getReasonPhrase().'`');
+        return new static('Mailjet responded with an error: `' . $error . '`');
     }
 }
