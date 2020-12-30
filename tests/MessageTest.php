@@ -26,7 +26,7 @@ class MessageTest extends TestCase
     {
         $message = new MailjetMessage('A message');
 
-        $this->assertEquals('A message', Arr::get($message->toArray(), 'message'));
+        $this->assertEquals('A message', Arr::get($message->toArray(), 'content'));
     }
 
     /** @test */
@@ -34,7 +34,7 @@ class MessageTest extends TestCase
     {
         $this->message->content('Hello world');
 
-        $this->assertEquals('Hello world', Arr::get($this->message->toArray(), 'message'));
+        $this->assertEquals('Hello world', Arr::get($this->message->toArray(), 'content'));
     }
 
     /** @test */
