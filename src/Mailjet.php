@@ -20,28 +20,7 @@ class Mailjet
      */
     public function sendEmail(string $to, array $data)
     {
-        $response = MailjetBase::post(Resources::$Email, $this->formatRequest($to, $data));
-
-        return $response->getStatus() === 200
-        ? $this->checkResponseAndReturn($response)
-        : true;
-    }
-
-    protected function checkResponseAndReturn(Response $response)
-    {
-        $content = $response->getBody();
-
-        $messageId = data_get($content, 'Sent.0.MessageID');
-
-        $success = true;
-
-        try {
-            $response = MailjetBase::get(Resources::$Message, ["id" => $messageId]);
-        } catch (Exception $e) {
-            $success = "The message $messageId wasn't sent, please check mailjet website";
-        }
-
-        return $success;
+        return MailjetBase::post(Resources::$Email, $this->formatRequest($to, $data));
     }
 
     /**

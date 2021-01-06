@@ -39,7 +39,7 @@ class MailjetChannel
 
         $response = $this->client->sendEmail($to, $message->toArray());
 
-        if ($response !== true) {
+        if ($response->getStatus() !== 200) {
             throw CouldNotSendNotification::serviceRespondedWithAnError($response);
         }
     }
