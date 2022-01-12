@@ -53,7 +53,7 @@ class MailjetMessage
      *
      * @var array
      */
-    public $rawAttachments = collect();
+    public $rawAttachments;
 
     /**
      * Create a new message instance.
@@ -176,7 +176,7 @@ class MailjetMessage
             'name'        => $this->name,
             'subject'     => $this->subject,
             'content'     => $content,
-            'attachments' => $this->rawAttachments->toArray(),
+            'attachments' => $this->rawAttachments,
         ];
     }
 }
