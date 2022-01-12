@@ -49,11 +49,11 @@ class MailjetMessage
     public $subject;
 
     /**
-     * The attachments array.
+     * The raw attachments for the message.
      *
-     * @var array|null
+     * @var array
      */
-    public $attachments;
+    public $rawAttachments = collect();
 
     /**
      * Create a new message instance.
@@ -134,14 +134,24 @@ class MailjetMessage
     }
 
     /**
-     * Set the Attachments object.
+     * Attach in-memory data as an attachment.
      *
-     * @param  string  $subject
+     * @param  string  $data
+     * @param  string  $name
+     * @param  array  $options
      * @return $this
      */
-    public function attachments(array $attachments)
+    public function attachData($data, $name, array $options = [])
     {
-        $this->attachments = $attachments;
+        $this->rawAttachments = collect($this->rawAttachments)
+                ->push([
+                    'Content-type' => data_get($options, "mime"),
+                    'Filename' => $name,
+                    'content' => $data
+                ])
+                ->unique(function ($file) {
+                    return $file['Filename'].$file['content'];
+                })->all();
 
         return $this;
     }
@@ -166,7 +176,7 @@ class MailjetMessage
             'name'        => $this->name,
             'subject'     => $this->subject,
             'content'     => $content,
-            'attachments' => $this->attachments,
+            'attachments' => $this->rawAttachments->toArray(),
         ];
     }
 }
