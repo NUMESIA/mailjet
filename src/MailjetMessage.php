@@ -49,6 +49,13 @@ class MailjetMessage
     public $subject;
 
     /**
+     * The attachments array.
+     *
+     * @var array|null
+     */
+    public $attachments;
+
+    /**
      * Create a new message instance.
      *
      * @param  string  $content
@@ -127,6 +134,19 @@ class MailjetMessage
     }
 
     /**
+     * Set the Attachments object.
+     *
+     * @param  string  $subject
+     * @return $this
+     */
+    public function attachments(array $attachments)
+    {
+        $this->attachments = $attachments;
+
+        return $this;
+    }
+
+    /**
      * Get array representation of the message.
      *
      * @return array
@@ -142,10 +162,11 @@ class MailjetMessage
         }
 
         return [
-            'sender'  => $this->sender,
-            'name'    => $this->name,
-            'subject' => $this->subject,
-            'content' => $content,
+            'sender'      => $this->sender,
+            'name'        => $this->name,
+            'subject'     => $this->subject,
+            'content'     => $content,
+            'attachments' => $this->attachments,
         ];
     }
 }

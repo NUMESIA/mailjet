@@ -2,10 +2,8 @@
 
 namespace Numesia\Mailjet;
 
-use Exception;
 use Mailjet as MailjetBase;
 use Mailjet\Resources;
-use Psr\Http\Message\ResponseInterface;
 use Mailjet\Response;
 
 class Mailjet
@@ -35,18 +33,19 @@ class Mailjet
     {
         $to = is_array($to) ? $to : [$to];
 
-        $recipients = array_map(function($recipient) {
+        $recipients = array_map(function ($recipient) {
             return [
-                'Email' => $recipient
+                'Email' => $recipient,
             ];
         }, $to);
 
         $body = [
-            'FromEmail'  => data_get($data, "sender") ?: env('MAIL_FROM_ADDRESS'),
-            'FromName'   => data_get($data, "name") ?: env('MAIL_FROM_NAME'),
-            'Subject'    => data_get($data, "subject"),
-            'Html-part'  => data_get($data, "content"),
-            'Recipients' => $recipients,
+            'FromEmail'   => data_get($data, "sender") ?: env('MAIL_FROM_ADDRESS'),
+            'FromName'    => data_get($data, "name") ?: env('MAIL_FROM_NAME'),
+            'Subject'     => data_get($data, "subject"),
+            'Html-part'   => data_get($data, "content"),
+            'Recipients'  => $recipients,
+            'Attachments' => data_get($data, "attachments") ?: [],
         ];
 
         return [
