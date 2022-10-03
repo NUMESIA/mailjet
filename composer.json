@@ -2,6 +2,7 @@
     "name": "numesia/mailjet",
     "description": "Mailjet Notifications driver",
     "homepage": "https://github.com/numesia/mailjet",
+    "license": "MIT",
     "authors": [
         {
             "name": "Amine OUDJEHIH",
